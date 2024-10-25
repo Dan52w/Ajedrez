@@ -2,6 +2,7 @@ package org.example.tablero;
 
 import org.example.pieza.Peon;
 import org.example.pieza.Pieza;
+import org.example.pieza.Torre;
 
 public class Tablero {
     private Casilla tablero[][];
@@ -29,8 +30,20 @@ public class Tablero {
     public Pieza crearPieza(int fila, int columna, String color, String nom) {
         if(fila == 2 || fila == 7){
             return crearPeon(fila, columna, nom);
+        } else if ((fila == 1 &&  (columna == 1 || columna == 8)) || (fila == 8 &&  (columna == 1 || columna == 8))) {
+            return crearTorre(fila, columna, nom);
         }
         return null;
+    }
+
+    public Pieza crearTorre(int fila, int columna, String nom) {
+        Torre torre = null;
+        if (fila == 1 && (columna == 1 || columna == 8)) {
+            torre = new Torre(nom, "Blanco", nom, "Torre");
+        }else{
+            torre = new Torre(nom, "Negro", nom, "Torre");
+        }
+        return torre;
     }
 
     public Peon crearPeon(int fila, int columna, String nom) {
@@ -61,7 +74,7 @@ public class Tablero {
                 if(tablero[i][j].getPieza() == null){
                     System.out.print("[" + tablero[i][j].getNombre() + "]");
                 }else {
-                    System.out.print("[" + tablero[i][j].getPieza().getColor() + "]");
+                    System.out.print("[" + tablero[i][j].getPieza().getTipo() + "]");
                 }
             }
             System.out.println();
