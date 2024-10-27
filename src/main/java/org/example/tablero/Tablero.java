@@ -20,9 +20,39 @@ public class Tablero {
                     col = altenarColor();
                 }
                 Pieza pieza = crearPieza(fila, columna, col, nom);
-                tablero[i][j] = new Casilla(nom, col, pieza);
+                if(pieza != null) {
+                    tablero[i][j] = new Casilla(nom, col, pieza, true);
+                }else{
+                    tablero[i][j] = new Casilla(nom, col, pieza);
+                }
             }
         }
+    }
+
+    public Casilla buscarCasilla(String pos){
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if(tablero[i][j].getNombre().equals(pos)){
+                    return tablero[i][j];
+                }
+            }
+        }
+        return null;
+    }
+
+    public void validarMovimiento(String posIni, String posSig) {
+        int[] posI = descomponer(posIni);
+        int[] posS = descomponer(posSig);
+
+    }
+
+    private int[] descomponer(String sig){
+        int[] movimientos = new int[2];
+        char[] sig2 = sig.toCharArray();
+        for (int i = 0; i < sig2.length; i++) {
+            movimientos[i] = Character.getNumericValue(sig2[i]);
+        }
+        return movimientos;
     }
 
     public Pieza crearPieza(int fila, int columna, String color, String nom) {
@@ -120,9 +150,9 @@ public class Tablero {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if(tablero[i][j].getPieza() == null){
-                    System.out.print("[" + tablero[i][j].getColor() + "]");
+                    System.out.print("[" + tablero[i][j].getNombre() + "]");
                 }else {
-                    System.out.print("[" + tablero[i][j].getPieza().getTipo() + "]");
+                    System.out.print("[" + tablero[i][j].getPieza().getIniPosicion() + "]");
                 }
             }
             System.out.println();

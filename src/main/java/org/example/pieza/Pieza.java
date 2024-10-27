@@ -1,5 +1,7 @@
 package org.example.pieza;
 
+import org.example.tablero.Casilla;
+
 public class Pieza {
     protected String nombre;
     protected String color;
@@ -14,8 +16,8 @@ public class Pieza {
         this.tipo = tipo;
     }
 
-    public Boolean valido(String ini, String sig){ return null;}
-    public void moverPieza(String ini, String sig){}
+    public Boolean valido(int[] posI, int[] posS, Casilla casilla){ return null;}
+    public void moverPieza(int[] posS){}
 
     public String getNombre() {
         return nombre;
