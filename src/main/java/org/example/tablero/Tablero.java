@@ -1,8 +1,6 @@
 package org.example.tablero;
 
-import org.example.pieza.Peon;
-import org.example.pieza.Pieza;
-import org.example.pieza.Torre;
+import org.example.pieza.*;
 
 public class Tablero {
     private Casilla tablero[][];
@@ -32,8 +30,58 @@ public class Tablero {
             return crearPeon(fila, columna, nom);
         } else if ((fila == 1 &&  (columna == 1 || columna == 8)) || (fila == 8 &&  (columna == 1 || columna == 8))) {
             return crearTorre(fila, columna, nom);
+        } else if ((fila == 1 &&  (columna == 2 || columna == 7)) || (fila == 8 &&  (columna == 2 || columna == 7))) {
+            return crearCaballo(fila, columna, nom);
+        } else if ((fila == 1 &&  (columna == 3 || columna == 6)) || (fila == 8 &&  (columna == 3 || columna == 6))) {
+            return crearAlfil(fila, columna, color, nom);
+        } else if ((fila == 1 &&  columna == 5) || (fila == 8 && columna == 5)) {
+            return crearReina(fila, columna, nom);
+        } else if ((fila == 1 &&  columna == 4) || (fila == 8 && columna == 4)) {
+            return crearRey(fila, columna, nom);
         }
         return null;
+    }
+
+    public Pieza crearRey(int fila, int columna, String nom) {
+        Rey rey  = null;
+        if(fila == 1 && columna == 5) rey = new Rey(nom, "Blanco", nom, "Rey");
+        else rey = new Rey(nom, "Negro", nom, "Rey");
+        return rey;
+    }
+
+    public Pieza crearReina(int fila, int columna, String nom) {
+        Reina reina = null;
+        if(fila == 1 && columna == 5) reina = new Reina(nom, "Blanco", nom, "Reina");
+        else reina = new Reina(nom, "Negro", nom, "Reina");
+        return reina;
+    }
+
+    public Pieza crearAlfil(int fila, int columna, String color, String nom) {
+        Alfil alfil = null;
+        if (fila == 1 && (columna == 3 || columna == 6)) {
+            if(color.equals("N")){
+                alfil = new Alfil(nom, "Blanco", nom, "AlfilN");
+            }else {
+                alfil = new Alfil(nom, "Blanco", nom, "AlfilB");
+            }
+        }else{
+            if(color.equals("N")){
+                alfil = new Alfil(nom, "Negro", nom, "AlfilN");
+            }else {
+                alfil = new Alfil(nom, "Negro", nom, "AlfilB");
+            }
+        }
+        return alfil;
+    }
+
+    public Pieza crearCaballo(int fila, int columna, String nom) {
+        Caballo caballo = null;
+        if (fila == 1 && (columna == 2 || columna == 7)) {
+            caballo = new Caballo(nom, "Blanco", nom, "Caballo");
+        }else{
+            caballo = new Caballo(nom, "Negro", nom, "Caballo");
+        }
+        return caballo;
     }
 
     public Pieza crearTorre(int fila, int columna, String nom) {
@@ -72,7 +120,7 @@ public class Tablero {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if(tablero[i][j].getPieza() == null){
-                    System.out.print("[" + tablero[i][j].getNombre() + "]");
+                    System.out.print("[" + tablero[i][j].getColor() + "]");
                 }else {
                     System.out.print("[" + tablero[i][j].getPieza().getTipo() + "]");
                 }
