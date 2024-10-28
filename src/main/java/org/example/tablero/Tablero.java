@@ -29,7 +29,60 @@ public class Tablero {
         }
     }
 
-    public Casilla buscarCasilla(String pos){
+    public Boolean validarMovimiento(String posIni, String posSig) {
+        boolean validar = false;
+        int[] posI = descomponer(posIni);
+        int[] posS = descomponer(posSig);
+        Casilla casilla1 = obtenerCasilla(posIni);
+        Casilla casilla2 = obtenerCasilla(posSig);
+
+        Pieza pieza = casilla1.getPieza();
+        if(pieza instanceof Peon){
+            if(pieza.valido(posI, posS, casilla2)){
+                editarCasilla(posIni, desocuparCasilla(casilla1));
+                editarCasilla(posSig, ocuparCasilla(casilla2, pieza));
+                return true;
+            }else{
+                return false;
+            }
+        } else if (pieza instanceof Torre) {
+
+        }
+        return false;
+    }
+
+    public int[] descomponer(String sig){
+        int[] movimientos = new int[2];
+        char[] sig2 = sig.toCharArray();
+        for (int i = 0; i < sig2.length; i++) {
+            movimientos[i] = Character.getNumericValue(sig2[i]);
+        }
+        return movimientos;
+    }
+
+    public void editarCasilla(String pos, Casilla casilla){
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if(tablero[i][j].getNombre().equals(pos)){
+                   tablero[i][j] = casilla;
+                }
+            }
+        }
+    }
+
+    public Casilla desocuparCasilla(Casilla casilla){
+        casilla.setOcupada(false);
+        casilla.setPieza(null);
+        return casilla;
+    }
+
+    public Casilla ocuparCasilla(Casilla casilla, Pieza pieza){
+        casilla.setOcupada(true);
+        casilla.setPieza(pieza);
+        return casilla;
+    }
+
+    public Casilla obtenerCasilla(String pos){
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if(tablero[i][j].getNombre().equals(pos)){
@@ -38,21 +91,6 @@ public class Tablero {
             }
         }
         return null;
-    }
-
-    public void validarMovimiento(String posIni, String posSig) {
-        int[] posI = descomponer(posIni);
-        int[] posS = descomponer(posSig);
-
-    }
-
-    private int[] descomponer(String sig){
-        int[] movimientos = new int[2];
-        char[] sig2 = sig.toCharArray();
-        for (int i = 0; i < sig2.length; i++) {
-            movimientos[i] = Character.getNumericValue(sig2[i]);
-        }
-        return movimientos;
     }
 
     public Pieza crearPieza(int fila, int columna, String color, String nom) {
@@ -150,12 +188,14 @@ public class Tablero {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if(tablero[i][j].getPieza() == null){
-                    System.out.print("[" + tablero[i][j].getNombre() + "]");
+                    System.out.print("[" + tablero[i][j].getOcupada() + "]");
                 }else {
-                    System.out.print("[" + tablero[i][j].getPieza().getIniPosicion() + "]");
+                    System.out.print("[" + tablero[i][j].getOcupada() + "]");
                 }
             }
             System.out.println();
         }
     }
+
+
 }

@@ -6,7 +6,7 @@ public class Pieza {
     protected String nombre;
     protected String color;
     protected String iniPosicion;
-    protected String sigPosicion;
+    protected String actPosicion;
     protected String tipo;
 
     public Pieza(String nombre, String color, String iniPosicion, String tipo) {
@@ -43,12 +43,12 @@ public class Pieza {
         this.iniPosicion = iniPosicion;
     }
 
-    public String getSigPosicion() {
-        return sigPosicion;
+    public String getActPosicion() {
+        return actPosicion;
     }
 
-    public void setSigPosicion(String sigPosicion) {
-        this.sigPosicion = sigPosicion;
+    public void setActPosicion(String actPosicion) {
+        this.actPosicion = actPosicion;
     }
 
     public String getTipo() {
