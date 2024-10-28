@@ -12,35 +12,44 @@ public class Peon extends Pieza{
     @Override
     public Boolean valido(int[] posI, int[] posS, Casilla casilla) {
         if(casilla.getOcupada()){
-            if(posI[1] == posS[1]-1 || posI[1] == posS[1]+1){
-                primerMovimiento = false;
-                moverPieza(posS);
-                return true;
+            if(!casilla.getPieza().getColor().equals(color) && !casilla.getPieza().getTipo().equals("Rey")){
+                if(posI[1] == posS[1]-1 || posI[1] == posS[1]+1){
+                    primerMovimiento = false;
+                    //moverPieza(posS);
+                    return true;
+                }else{
+                    System.out.println("XD1");
+                    return false;
+                }
             }else{
+                System.out.println("XD2");
                 return false;
             }
         } else if (!primerMovimiento) {
-            if(posI[1] == posS[1]+1){
-                moverPieza(posS);
+            if(posS[0] == posI[0]+1){
+                //moverPieza(posS);
                 return true;
             }else{
+                System.out.println("XD3");
                 return false;
             }
         } else if (primerMovimiento) {
-            if(posI[1] == posS[1]+1 || posI[1] == posS[1]+2){
+            if(posS[0] == posI[0]+1 || posS[0] == posI[0]+2){
                 primerMovimiento = false;
-                moverPieza(posS);
+                //moverPieza(posS);
                 return true;
             }else {
+                System.out.println("XD4");
                 return false;
             }
         }
+        System.out.println("XD5");
         return false;
     }
 
     @Override
     public void moverPieza(int[] posS) {
-        String newPosInicial = "" + posS[0] + "" + posS[1];
-        iniPosicion = newPosInicial;
+        String newPos = "" + posS[0] + "" + posS[1];
+        actPosicion = newPos;
     }
 }
