@@ -18,11 +18,9 @@ public class Peon extends Pieza{
                     //moverPieza(posS);
                     return true;
                 }else{
-                    System.out.println("XD1");
                     return false;
                 }
             }else{
-                System.out.println("XD2");
                 return false;
             }
         } else if (!primerMovimiento) {
@@ -30,7 +28,6 @@ public class Peon extends Pieza{
                 //moverPieza(posS);
                 return true;
             }else{
-                System.out.println("XD3");
                 return false;
             }
         } else if (primerMovimiento) {
@@ -39,11 +36,9 @@ public class Peon extends Pieza{
                 //moverPieza(posS);
                 return true;
             }else {
-                System.out.println("XD4");
                 return false;
             }
         }
-        System.out.println("XD5");
         return false;
     }
 
