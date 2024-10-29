@@ -2,6 +2,8 @@ package org.example.pieza;
 
 import org.example.tablero.Casilla;
 
+import java.util.List;
+
 public class Peon extends Pieza{
     private boolean primerMovimiento = true;
 
@@ -10,11 +12,12 @@ public class Peon extends Pieza{
     }
 
     @Override
-    public Boolean valido(int[] posI, int[] posS, Casilla casilla) {
+    public Boolean valido(int[] posI, int[] posS, List<Casilla> casillaList) {
         if((posI[0] > 0 && posI[0] < 9)
                 && (posI[1] > 0 && posI[1] < 9)
                 && (posS[0] > 0 && posS[0] < 9)
                 && (posS[1] > 0 && posS[1] < 9)){ //Validar que el peon si se este moviendo dentro del tablero y no por fuera de este
+            Casilla casilla = casillaList.get(0);
             if(casilla.getOcupada()){ //Para validar los casos en donde se capturen piezas
                 if(!casilla.getPieza().getColor().equals(color) && !casilla.getPieza().getTipo().equals("Rey")){
                     if((posI[1] == posS[1]-1 || posI[1] == posS[1]+1) //Validar si es hacia la derecha o izquierda

@@ -2,6 +2,8 @@ package org.example.pieza;
 
 import org.example.tablero.Casilla;
 
+import java.util.List;
+
 public class Pieza {
     protected String nombre;
     protected String color;
@@ -15,8 +17,10 @@ public class Pieza {
         this.iniPosicion = iniPosicion;
         this.tipo = tipo;
     }
-
-    public Boolean valido(int[] posI, int[] posS, Casilla casilla){ return null;}
+    //Se pasan Posiciones (posI = Pos... Inicial y posS = Pos... Siguiente) como vectores ya que son dos filas y columnas
+    //Se pasa una lista de casillas, para aquellas piezas que se pueden mover largas distancias y se pueda
+    //verificar que entre esas distancias no haya una pieza que interrumpa el movimeinto
+    public Boolean valido(int[] posI, int[] posS, List<Casilla> casillaList) { return null;}
     public void moverPieza(int[] posS){}
 
     public String getNombre() {

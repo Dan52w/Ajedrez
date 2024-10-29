@@ -2,6 +2,9 @@ package org.example.tablero;
 
 import org.example.pieza.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Tablero {
     private Casilla tablero[][];
     private String col = "N";
@@ -10,35 +13,37 @@ public class Tablero {
     private String nom;
 
     public Tablero() {
-        tablero = new Casilla[8][8];
+        tablero = new Casilla[8][8]; //Creamos el tablero de 8x8 con todas las casillas
         for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
+            for (int j = 0; j < 8; j++) { //Para recorrer todo el tablero
                 fila = i + 1;
                 columna = j + 1;
-                nom = fila + "" + columna;
-                if (columna != 1) {
-                    col = altenarColor();
+                nom = fila + "" + columna; //El i/j + 1, es porque el i/j empiezan en cero y esto es para contar el nombre desde el 1 hacia arriba
+                if (columna != 1) { //La primera colum siempre sera del mismo color que la ultima colum de la fila anterior y todas empiezan por 1
+                    col = altenarColor(); //Llamamos el metodo para cambiar el color de la casilla, asi podremos tener todo alternado
                 }
-                Pieza pieza = crearPieza(fila, columna, col, nom);
-                if(pieza != null) {
-                    tablero[i][j] = new Casilla(nom, col, pieza, true);
+                //Pieza es una clase padre de las piezas peon, caballo, etc...
+                Pieza pieza = crearPieza(fila, columna, col, nom); //Llamamos el metodo crearPieza que nos creara cualquier Piez que necesitemos del tablero inicial.¿
+                if(pieza != null) { //En casillas tenemos un atributo llamado "ocupada" si alguna pieza esta alli, en caso de que se le pase una pieza a esa casilla
+                    tablero[i][j] = new Casilla(nom, col, pieza, true); //se llama al Constructor que nos permita especificar que si lo esta
                 }else{
-                    tablero[i][j] = new Casilla(nom, col, pieza);
+                    tablero[i][j] = new Casilla(nom, col, pieza); //Aqui si la casilla no se le pasa una pieza != de null, no necesita especificar que esta vacia.
                 }
             }
         }
     }
 
-    public Boolean validarMovimiento(String posIni, String posSig) {
+    public Boolean validarMovimiento(String posIni, String posSig) { //Sin comentar por el momento, ya que aun hay que hacer ajustes.
         boolean validar = false;
         int[] posI = descomponer(posIni);
         int[] posS = descomponer(posSig);
         Casilla casilla1 = obtenerCasilla(posIni);
         Casilla casilla2 = obtenerCasilla(posSig);
-
+        List<Casilla> casillas = new ArrayList<>();
+        casillas.add(casilla2);
         Pieza pieza = casilla1.getPieza();
         if(pieza instanceof Peon){
-            if(pieza.valido(posI, posS, casilla2)){
+            if(pieza.valido(posI, posS, casillas)){
                 editarCasilla(posIni, desocuparCasilla(casilla1));
                 editarCasilla(posSig, ocuparCasilla(casilla2, pieza));
                 return true;
@@ -51,85 +56,90 @@ public class Tablero {
         return false;
     }
 
-    public int[] descomponer(String sig){
+    public int[] descomponer(String sig){ //Ya que los datos se estan pasando por String, necesitamos pasarlos como enteros en una matriz
         int[] movimientos = new int[2];
-        char[] sig2 = sig.toCharArray();
+        char[] sig2 = sig.toCharArray(); //Aqui descomponemos el String en char en un vector,
         for (int i = 0; i < sig2.length; i++) {
-            movimientos[i] = Character.getNumericValue(sig2[i]);
+            movimientos[i] = Character.getNumericValue(sig2[i]); //Aqui convertimos de Char a entero y lo guardamos en una matriz
         }
         return movimientos;
     }
 
-    public void editarCasilla(String pos, Casilla casilla){
+    public void editarCasilla(String pos, Casilla casilla){ //Cuando hacemos un moviento necestamos editar esa casilla
         for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                if(tablero[i][j].getNombre().equals(pos)){
-                   tablero[i][j] = casilla;
+            for (int j = 0; j < 8; j++) { //Para buscar la casilla la cual se va a editar
+                if(tablero[i][j].getNombre().equals(pos)){ //Si la casilla tiene el mismo nombre de la casilla que se busca
+                   tablero[i][j] = casilla; //Si si asignamos cambiamos/editamos esa casilla
                 }
             }
         }
     }
 
-    public Casilla desocuparCasilla(Casilla casilla){
-        casilla.setOcupada(false);
-        casilla.setPieza(null);
+    public Casilla desocuparCasilla(Casilla casilla){ //cuando necesitamos movemos una pieza la
+        casilla.setOcupada(false); //anterior casilla debe estar desocupada
+        casilla.setPieza(null); //y su pieza null
         return casilla;
     }
 
-    public Casilla ocuparCasilla(Casilla casilla, Pieza pieza){
-        casilla.setOcupada(true);
-        casilla.setPieza(pieza);
+    public Casilla ocuparCasilla(Casilla casilla, Pieza pieza){ //Cuando movemos una pieza la
+        casilla.setOcupada(true); //Se debe ocupar
+        casilla.setPieza(pieza); //y se debe pasar la pieza que van a tener
         return casilla;
     }
 
-    public Casilla obtenerCasilla(String pos){
+    public Casilla obtenerCasilla(String pos){ //Cuando necesitamos obtener una casilla para editarlo o lo que sea necesario hacer
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                if(tablero[i][j].getNombre().equals(pos)){
-                    return tablero[i][j];
+                if(tablero[i][j].getNombre().equals(pos)){ //Si el nombre de la casilla es igual a el de pos (Posicion)
+                    return tablero[i][j]; //Retornarmo esa casilla
                 }
             }
         }
-        return null;
+        return null; //Si no la encuentra
     }
 
-    public Pieza crearPieza(int fila, int columna, String color, String nom) {
-        if(fila == 2 || fila == 7){
+    public Pieza crearPieza(int fila, int columna, String color, String nom) { //Esta funcion crea una pieza en el TableroInicial, dependiendo las pos que se le pasen
+        if(fila == 2 || fila == 7){ //Aqui validamos que esten en la fila 2/7 ya son los lugares donde se encuentran los peones
             return crearPeon(fila, columna, nom);
-        } else if ((fila == 1 &&  (columna == 1 || columna == 8)) || (fila == 8 &&  (columna == 1 || columna == 8))) {
+        } else if ((fila == 1 &&  (columna == 1 || columna == 8))
+                || (fila == 8 &&  (columna == 1 || columna == 8))) { //Validamos Fila 1/8 y Columbas 1/8, que son donde van las torres
             return crearTorre(fila, columna, nom);
-        } else if ((fila == 1 &&  (columna == 2 || columna == 7)) || (fila == 8 &&  (columna == 2 || columna == 7))) {
+        } else if ((fila == 1 &&  (columna == 2 || columna == 7))
+                || (fila == 8 &&  (columna == 2 || columna == 7))) { //Validamos Fila 1/8 y Columbas 2/7, que son donde van las caballos
             return crearCaballo(fila, columna, nom);
-        } else if ((fila == 1 &&  (columna == 3 || columna == 6)) || (fila == 8 &&  (columna == 3 || columna == 6))) {
+        } else if ((fila == 1 &&  (columna == 3 || columna == 6))
+                || (fila == 8 &&  (columna == 3 || columna == 6))) { //Validamos Fila 1/8 y Columbas 3/6, que son donde van las alfiles
             return crearAlfil(fila, columna, color, nom);
-        } else if ((fila == 1 &&  columna == 5) || (fila == 8 && columna == 5)) {
+        } else if ((fila == 1 &&  columna == 5)
+                || (fila == 8 && columna == 5)) { //Validamos Fila 1/8 y Columbas 5, que es donde va la reina
             return crearReina(fila, columna, nom);
-        } else if ((fila == 1 &&  columna == 4) || (fila == 8 && columna == 4)) {
+        } else if ((fila == 1 &&  columna == 4)
+                || (fila == 8 && columna == 4)) { //Validamos Fila 1/8 y Columbas 4, que es donde va el rey
             return crearRey(fila, columna, nom);
         }
         return null;
     }
 
     public Pieza crearRey(int fila, int columna, String nom) {
-        Rey rey  = null;
+        Rey rey  = null; //Aqui validamos si el rey es Blanco o negro
         if(fila == 1 && columna == 5) rey = new Rey(nom, "Blanco", nom, "Rey");
         else rey = new Rey(nom, "Negro", nom, "Rey");
         return rey;
     }
 
     public Pieza crearReina(int fila, int columna, String nom) {
-        Reina reina = null;
+        Reina reina = null; //Aqui validamos si la reina es Blanco o negro
         if(fila == 1 && columna == 5) reina = new Reina(nom, "Blanco", nom, "Reina");
         else reina = new Reina(nom, "Negro", nom, "Reina");
         return reina;
     }
 
     public Pieza crearAlfil(int fila, int columna, String color, String nom) {
-        Alfil alfil = null;
+        Alfil alfil = null; //Aqui validamos si los alfiles son blanco o negros
         if (fila == 1 && (columna == 3 || columna == 6)) {
-            if(color.equals("N")){
+            if(color.equals("N")){ //Para saber que tipo de alfil hay que poner
                 alfil = new Alfil(nom, "Blanco", nom, "AlfilN");
-            }else {
+            }else { //Ya que los alfiles pueden ser de la casilla blana o negras
                 alfil = new Alfil(nom, "Blanco", nom, "AlfilB");
             }
         }else{
@@ -143,7 +153,7 @@ public class Tablero {
     }
 
     public Pieza crearCaballo(int fila, int columna, String nom) {
-        Caballo caballo = null;
+        Caballo caballo = null; //Aqui validamos si los caballos son blanco o negros
         if (fila == 1 && (columna == 2 || columna == 7)) {
             caballo = new Caballo(nom, "Blanco", nom, "Caballo");
         }else{
@@ -153,7 +163,7 @@ public class Tablero {
     }
 
     public Pieza crearTorre(int fila, int columna, String nom) {
-        Torre torre = null;
+        Torre torre = null; //Aqui validamos si las torres son blanco o negros
         if (fila == 1 && (columna == 1 || columna == 8)) {
             torre = new Torre(nom, "Blanco", nom, "Torre");
         }else{
@@ -163,7 +173,7 @@ public class Tablero {
     }
 
     public Peon crearPeon(int fila, int columna, String nom) {
-        Peon peon = null;
+        Peon peon = null; //Aqui validamos si los peones son blanco o negros
         if(fila == 2 || fila == 7){
             if(fila == 2){
                 peon = new Peon(nom, "Blanco", nom, "Peon");
@@ -175,7 +185,7 @@ public class Tablero {
         return peon;
     }
 
-    public String altenarColor() {
+    public String altenarColor() { //Para altenernar el color de la casilla
         if (col.equals("N")) {
             col = "B";
         }else if (col.equals("B")) {
@@ -188,6 +198,19 @@ public class Tablero {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if(tablero[i][j].getPieza() == null){
+                    System.out.print("[" + tablero[i][j].getNombre()+ "]");
+                }else {
+                    System.out.print("[" + tablero[i][j].getNombre() + "]");
+                }
+            }
+            System.out.println();
+        }
+    }
+
+    public void imprimirTableroOcupado(){
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if(tablero[i][j].getPieza() == null){
                     System.out.print("[" + tablero[i][j].getOcupada() + "]");
                 }else {
                     System.out.print("[" + tablero[i][j].getOcupada() + "]");
@@ -196,6 +219,4 @@ public class Tablero {
             System.out.println();
         }
     }
-
-
 }
