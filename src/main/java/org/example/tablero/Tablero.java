@@ -35,14 +35,18 @@ public class Tablero {
 
     public Boolean validarMovimiento(String posIni, String posSig) { //Sin comentar por el momento, ya que aun hay que hacer ajustes.
         boolean validar = false;
-        int[] posI = descomponer(posIni);
+        int[] posI = descomponer(posIni); //Convertimos los String en enteros para poder trabajar la validacion
         int[] posS = descomponer(posSig);
-        Casilla casilla1 = obtenerCasilla(posIni);
+        Casilla casilla1 = obtenerCasilla(posIni); //Obtenemos las casillas para despues poder editarlas
         Casilla casilla2 = obtenerCasilla(posSig);
-        List<Casilla> casillas = new ArrayList<>();
-        casillas.add(casilla2);
+        List<Casilla> casillas = new ArrayList<>(); //Creamos la lista para guardar una o mas casillas en caso de ser necesario
         Pieza pieza = casilla1.getPieza();
-        if(pieza instanceof Peon){
+
+        if(pieza instanceof Peon){ //En Caso de que sea un peon hacer
+            casillas.add(casilla2); //Add la casilla2 para asegurarnos de que sea la primera en entrar.
+            int p = posI[0]-1;
+            casillas = obtenerCasillasVerticales(p, casillas);
+            System.out.println(casillas.get(4).getNombre());
             if(pieza.valido(posI, posS, casillas)){
                 editarCasilla(posIni, desocuparCasilla(casilla1));
                 editarCasilla(posSig, ocuparCasilla(casilla2, pieza));
@@ -96,6 +100,21 @@ public class Tablero {
             }
         }
         return null; //Si no la encuentra
+    }
+
+    public List<Casilla> obtenerCasillasVerticales(int columna, List<Casilla> casillas) { //Al momento de mover una torre necesitamos toda la fila en la que se mueve
+        for (int i = 0; i < 8; i++) { //Se encargara de recorrer toda la fila de y agregarla a la lista
+            casillas.add(tablero[i][columna]);
+        }
+        return casillas; //Retornamos
+    }
+
+    public List<Casilla> obtenerCasillasHorizontales(int fila) { //Al momento de mover una torre necesitamos toda la columa en la que se mueve
+        List<Casilla> casillas = new ArrayList<>(); //Creamos una lista de Casillas que regresaremos.
+        for (int i = 0; i < 8; i++) { //Se encargara de recorrer toda la fila de y agregarla a la lista
+            casillas.add(tablero[fila][i]);
+        }
+        return casillas; //Retornamos
     }
 
     public Pieza crearPieza(int fila, int columna, String color, String nom) { //Esta funcion crea una pieza en el TableroInicial, dependiendo las pos que se le pasen
