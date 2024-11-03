@@ -40,13 +40,13 @@ public class Tablero {
         Casilla casilla1 = obtenerCasilla(posIni); //Obtenemos las casillas para despues poder editarlas
         Casilla casilla2 = obtenerCasilla(posSig);
         List<Casilla> casillas = new ArrayList<>(); //Creamos la lista para guardar una o mas casillas en caso de ser necesario
+        casillas.add(casilla2); //Add la casilla2 para asegurarnos de que sea la primera en entrar y ubicarlo con .get(0).
         Pieza pieza = casilla1.getPieza();
+        int p;
 
         if(pieza instanceof Peon){ //En Caso de que sea un peon hacer
-            casillas.add(casilla2); //Add la casilla2 para asegurarnos de que sea la primera en entrar.
-            int p = posI[0]-1;
+            p = posI[0]-1; //Asegurarnos de que pasara toda la Columna del peon
             casillas = obtenerCasillasVerticales(p, casillas);
-            System.out.println(casillas.get(4).getNombre());
             if(pieza.valido(posI, posS, casillas)){
                 editarCasilla(posIni, desocuparCasilla(casilla1));
                 editarCasilla(posSig, ocuparCasilla(casilla2, pieza));
@@ -55,7 +55,19 @@ public class Tablero {
                 return false;
             }
         } else if (pieza instanceof Torre) {
-
+            if(posI[1] == posS[1]){
+                p = posI[1]-1;
+                casillas = obtenerCasillasVerticales(p, casillas);
+            } else if (posI[0] == posS[0]) {
+                p = posI[0]-1;
+                casillas = obtenerCasillasHorizontales(p, casillas);
+            }
+            if(pieza.valido(posI, posS, casillas)){
+                editarCasilla(posIni, desocuparCasilla(casilla1));
+                editarCasilla(posSig, ocuparCasilla(casilla2, pieza));
+                return true;
+            }
+            return false;
         }
         return false;
     }
@@ -109,8 +121,7 @@ public class Tablero {
         return casillas; //Retornamos
     }
 
-    public List<Casilla> obtenerCasillasHorizontales(int fila) { //Al momento de mover una torre necesitamos toda la columa en la que se mueve
-        List<Casilla> casillas = new ArrayList<>(); //Creamos una lista de Casillas que regresaremos.
+    public List<Casilla> obtenerCasillasHorizontales(int fila, List<Casilla> casillas) { //Al momento de mover una torre necesitamos toda la columa en la que se mueve
         for (int i = 0; i < 8; i++) { //Se encargara de recorrer toda la fila de y agregarla a la lista
             casillas.add(tablero[fila][i]);
         }
@@ -233,6 +244,19 @@ public class Tablero {
                     System.out.print("[" + tablero[i][j].getOcupada() + "]");
                 }else {
                     System.out.print("[" + tablero[i][j].getOcupada() + "]");
+                }
+            }
+            System.out.println();
+        }
+    }
+
+    public void imprimirTableroPieza(){
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if(tablero[i][j].getPieza() == null){
+                    System.out.print("[" + tablero[i][j].getNombre()+ "]");
+                }else {
+                    System.out.print("[" + tablero[i][j].getPieza().getTipo() + "]");
                 }
             }
             System.out.println();

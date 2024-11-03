@@ -22,6 +22,7 @@ public class Pieza {
     //verificar que entre esas distancias no haya una pieza que interrumpa el movimeinto
     public Boolean valido(int[] posI, int[] posS, List<Casilla> casillaList) { return null;}
     public Casilla buscarCasilla(List<Casilla> casillaList, int[] pos){return null;}
+    public Boolean comprobarCasillas(List<Casilla> casillaList, int[] posI, int[] posS){return null;}
     public void moverPieza(int[] posS){}
 
     public String getNombre() {
