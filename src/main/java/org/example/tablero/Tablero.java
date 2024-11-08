@@ -68,6 +68,13 @@ public class Tablero {
                 return true;
             }
             return false;
+        } else if (pieza instanceof Caballo) {
+            casillas = obtenerLCasillas(posI[0]-1, posI[1]-1, casillas);
+            if (pieza.valido(posI, posS, casillas)){
+                editarCasilla(posIni, desocuparCasilla(casilla1));
+                editarCasilla(posSig, ocuparCasilla(casilla2, pieza));
+                return true;
+            }
         }
         return false;
     }
@@ -126,6 +133,30 @@ public class Tablero {
             casillas.add(tablero[fila][i]);
         }
         return casillas; //Retornamos
+    }
+
+    public List<Casilla> obtenerLCasillas(int fila, int columna, List<Casilla> casillas) {
+        if (esCasillaValida(fila + 2, columna + 1)) //Validamos en L, y como siempre sumamos  o restastamos dos y 1, debemos ver que la casilla exista
+            if (tablero[fila + 2][columna + 1] != null) casillas.add(tablero[fila + 2][columna + 1]);
+        if (esCasillaValida(fila + 2, columna - 1))
+            if (tablero[fila + 2][columna - 1] != null) casillas.add(tablero[fila + 2][columna - 1]);
+        if (esCasillaValida(fila - 2, columna + 1))
+            if (tablero[fila - 2][columna + 1] != null) casillas.add(tablero[fila - 2][columna + 1]);
+        if (esCasillaValida(fila - 2, columna - 1))
+            if (tablero[fila - 2][columna - 1] != null) casillas.add(tablero[fila - 2][columna - 1]);
+        if (esCasillaValida(fila + 1, columna + 2))
+            if (tablero[fila + 1][columna + 2] != null) casillas.add(tablero[fila + 1][columna + 2]);
+        if (esCasillaValida(fila - 1, columna + 2))
+            if (tablero[fila - 1][columna + 2] != null) casillas.add(tablero[fila - 1][columna + 2]);
+        if (esCasillaValida(fila + 1, columna - 2))
+            if (tablero[fila + 1][columna - 2] != null) casillas.add(tablero[fila + 1][columna - 2]);
+        if (esCasillaValida(fila - 1, columna - 2))
+            if (tablero[fila - 1][columna - 2] != null) casillas.add(tablero[fila - 1][columna - 2]);
+        return casillas;
+    }
+
+    private boolean esCasillaValida(int fila, int columna) { //Esta funcion esta echa para validar que las casillas si esten entre los rango asignados
+        return (fila >= 0 && fila < 8) && (columna >= 0 && columna < 8);
     }
 
     public Pieza crearPieza(int fila, int columna, String color, String nom) { //Esta funcion crea una pieza en el TableroInicial, dependiendo las pos que se le pasen
