@@ -75,6 +75,25 @@ public class Tablero {
                 editarCasilla(posSig, ocuparCasilla(casilla2, pieza));
                 return true;
             }
+        } else if (pieza instanceof Alfil){
+            if(posI[0] < posS[0]){
+                casillas = obtenerCasillasDiagonalesArriba(posI[0], posI[1], casillas);
+                for(Casilla casilla : casillas){
+                    System.out.println(casilla.getNombre());
+                }
+            } else if (posI[0] > posS[0]) {
+                casillas = obtenerCasillasDiagonalesAbajo(posI[0], posI[1], casillas);
+                for(Casilla casilla : casillas){
+                    System.out.println(casilla.getNombre());
+                }
+            }else {
+                return false;
+            }
+            if (pieza.valido(posI, posS, casillas)){
+                editarCasilla(posIni, desocuparCasilla(casilla1));
+                editarCasilla(posSig, ocuparCasilla(casilla2, pieza));
+                return true;
+            }
         }
         return false;
     }
@@ -152,6 +171,56 @@ public class Tablero {
             if (tablero[fila + 1][columna - 2] != null) casillas.add(tablero[fila + 1][columna - 2]);
         if (esCasillaValida(fila - 1, columna - 2))
             if (tablero[fila - 1][columna - 2] != null) casillas.add(tablero[fila - 1][columna - 2]);
+        return casillas;
+    }
+
+    public List<Casilla> obtenerCasillasDiagonalesArriba(int fila, int columna, List<Casilla> casillas) {
+        int filaSig = fila+1; //Le sumamos uno ya que vamos a obtener las siguientes casillas de la sig fila
+        int columnaSig[] = {columna -1, columna + 1}; //Creamos un vec de 2, ya que por cada fila max obtendremos dos posiciones
+        String nomb[] = {"",""}; //Creamos un vec de String, para guardar el nombre de 2 posiciones y buscarlas por estas
+        for (int i = fila; i < 8; i++) { //Iniciamos desde la posicion Fila, para omitirnos gran parte de la busquedas
+            if (filaSig <= 8) { //Validamos que fila, no supere a 8 para poder buscar por nombres
+                if (columnaSig[0] >= 0) { //Necesitamos restringir que nunca busque por numeros debajo de cero
+                    nomb[0] = ""+filaSig + columnaSig[0]; //Guardamos el nombre de la posMenor a buscar en esta fila
+                } //Cabe recalcar que cada que avance i, el nomb cambiara
+                if (columnaSig[1] <= 8) { //Necesitamos restringir que nunca busque por mayor que 8
+                    nomb[1] = ""+filaSig + columnaSig[1]; //Guardamos el nombre de la posMayor a buscar en esta fila
+                }
+            }
+            for (int j = 0; j < 8; j++) { //Recorremos en columnas
+                if(tablero[i][j].getNombre().equals(nomb[0]) || tablero[i][j].getNombre().equals(nomb[1])) {
+                    casillas.add(tablero[i][j]); //Si el nombre de la posicion del tablero es igual a alguno de los dos nomb lo agg a la List
+                }
+            }
+            filaSig++; //Para buscar en la siguiente fila
+            columnaSig[0]--; //Ya que siempre que aumentamos una fila a buscar la distancia cree en dos disminuimos uno aqui
+            columnaSig[1]++; //Y aumentamos el otro aqui
+        }
+        return casillas;
+    }
+    //Muchas de las carracteristicas de este son iguales a las de arriba asi que se comentaran las diferencias
+    public List<Casilla> obtenerCasillasDiagonalesAbajo(int fila, int columna, List<Casilla> casillas) {
+        int filaSig = fila - 1; //Aqui estamos buscando en de la pos de la pieza hacia atras, asi que debemos restar
+        int columnaSig[] = {columna - 1, columna + 1};
+        String nomb[] = {"",""};
+        for (int i = fila-2; i >= 0; i--) { //Aqui restamos 2, porque el se esta pasando el dig del nomb de la fila y tiene +1
+            if (filaSig >= 0) { //Como buscamos hacia abajo validamos que fila nunca sea un valor negativo
+                if (columnaSig[0] >= 0) {
+                    nomb[0] = ""+filaSig + columnaSig[0];
+                }
+                if (columnaSig[1] <= 8) {
+                    nomb[1] = ""+filaSig + columnaSig[1];
+                }
+            }
+            for (int j = 0; j < 8; j++) {
+                if(tablero[i][j].getNombre().equals(nomb[0]) || tablero[i][j].getNombre().equals(nomb[1])) {
+                    casillas.add(tablero[i][j]);
+                }
+            }
+                filaSig--;
+                columnaSig[0]--;
+                columnaSig[1]++;
+        }
         return casillas;
     }
 
@@ -276,6 +345,15 @@ public class Tablero {
                 }else {
                     System.out.print("[" + tablero[i][j].getOcupada() + "]");
                 }
+            }
+            System.out.println();
+        }
+    }
+
+    public void imprimirTableroColor(){
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                    System.out.print("[" + tablero[i][j].getColor()+ "]");
             }
             System.out.println();
         }
