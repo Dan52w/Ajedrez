@@ -18,18 +18,21 @@ public class Alfil extends Pieza{
             Casilla casilla = casillaList.get(0);
             if (casilla.getOcupada()) { //Para validar los casos en donde se capturen piezas
                 if (!casilla.getPieza().getColor().equals(color) && !casilla.getPieza().getTipo().equals("Rey")) {
-                    if(posI[0] < posS[0]){ //En caso de que la fila ini sea menor a la fila sig se debe buscar por el metodo arriba
-                        return comprobarCasillasArriba(casillaList, casilla, posI);
-                    } else if (posI[0] > posS[0]) { //En caso de que la fila ini sea mayor a la fila sig se debe buscar el metodo abajo
-                        return comprobarCasillasAbajo(casillaList, casilla, posI);
-                    }
+                    return comprobarCasillas(casillaList, posI, posS);
                 }
             }
-            if(posI[0] < posS[0]){
-                return comprobarCasillasArriba(casillaList, casilla, posI);
-            } else if (posI[0] > posS[0]) {
-                return comprobarCasillasAbajo(casillaList, casilla, posI);
-            }
+            return comprobarCasillas(casillaList, posI, posS);
+        }
+        return false;
+    }
+
+    @Override
+    public Boolean comprobarCasillas(List<Casilla> casillaList, int[] posI, int[] posS) {
+        Casilla casilla = casillaList.getFirst();
+        if(posI[0] < posS[0]){ //En caso de que la fila ini sea menor a la fila sig se debe buscar por el metodo arriba
+            return comprobarCasillasArriba(casillaList, casilla, posI);
+        } else if (posI[0] > posS[0]) { //En caso de que la fila ini sea mayor a la fila sig se debe buscar el metodo abajo
+            return comprobarCasillasAbajo(casillaList, casilla, posI);
         }
         return false;
     }
