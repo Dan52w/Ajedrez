@@ -106,6 +106,13 @@ public class Tablero {
                 editarCasilla(posSig, ocuparCasilla(casilla2, pieza));
                 return true;
             }
+        } else if (pieza instanceof Rey) {
+            casillas = obtenerCasilla3x3(posI[0]-1, posI[1]-1, casillas);
+            if(pieza.valido(posI, posS, casillas)){
+                editarCasilla(posIni, desocuparCasilla(casilla1));
+                editarCasilla(posSig, ocuparCasilla(casilla2, pieza));
+                return true;
+            }
         }
         return false;
     }
@@ -236,6 +243,18 @@ public class Tablero {
         return casillas;
     }
 
+    public List<Casilla> obtenerCasilla3x3(int fila, int columna, List<Casilla> casillas){ //Para obtener todas las casillas del alrededor de la pieza
+        if (esCasillaValida(fila-1, columna)) casillas.add(tablero[fila-1][columna]);
+        if (esCasillaValida(fila-1, columna-1)) casillas.add(tablero[fila-1][columna-1]);
+        if (esCasillaValida(fila-1, columna+1)) casillas.add(tablero[fila-1][columna+1]);
+        if (esCasillaValida(fila, columna-1)) casillas.add(tablero[fila][columna-1]);
+        if (esCasillaValida(fila, columna+1)) casillas.add(tablero[fila][columna-1]);
+        if (esCasillaValida(fila+1, columna)) casillas.add(tablero[fila+1][columna]);
+        if (esCasillaValida(fila+1, columna-1)) casillas.add(tablero[fila+1][columna-1]);
+        if (esCasillaValida(fila+1, columna+1)) casillas.add(tablero[fila+1][columna+1]);
+        return casillas;
+    }
+
     private boolean esCasillaValida(int fila, int columna) { //Esta funcion esta echa para validar que las casillas si esten entre los rango asignados
         return (fila >= 0 && fila < 8) && (columna >= 0 && columna < 8);
     }
@@ -264,7 +283,7 @@ public class Tablero {
 
     public Pieza crearRey(int fila, int columna, String nom) {
         Rey rey  = null; //Aqui validamos si el rey es Blanco o negro
-        if(fila == 1 && columna == 5) rey = new Rey(nom, "Blanco", nom, "Rey");
+        if(fila == 1 && columna == 4) rey = new Rey(nom, "Blanco", nom, "Rey");
         else rey = new Rey(nom, "Negro", nom, "Rey");
         return rey;
     }
@@ -377,7 +396,7 @@ public class Tablero {
                 if(tablero[i][j].getPieza() == null){
                     System.out.print("[" + tablero[i][j].getNombre()+ "]");
                 }else {
-                    System.out.print("[" + tablero[i][j].getPieza().getTipo() + "]");
+                    System.out.print("[" + tablero[i][j].getPieza().getTipo() + " " + tablero[i][j].getPieza().getColor()  + "]");
                 }
             }
             System.out.println();
