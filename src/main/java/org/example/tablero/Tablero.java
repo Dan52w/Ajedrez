@@ -45,7 +45,7 @@ public class Tablero {
         int p;
 
         if(pieza instanceof Peon){ //En Caso de que sea un peon hacer
-            p = posI[0]-1; //Asegurarnos de que pasara toda la Columna del peon
+            p = posI[1]-1; //Asegurarnos de que pasara toda la Columna del peon
             casillas = obtenerCasillasVerticales(p, casillas);
             if(pieza.valido(posI, posS, casillas)){
                 editarCasilla(posIni, desocuparCasilla(casilla1));
@@ -75,18 +75,30 @@ public class Tablero {
                 editarCasilla(posSig, ocuparCasilla(casilla2, pieza));
                 return true;
             }
-        } else if (pieza instanceof Alfil){
+        } else if (pieza instanceof Alfil) {
             if(posI[0] < posS[0]){
                 casillas = obtenerCasillasDiagonalesArriba(posI[0], posI[1], casillas);
-                for(Casilla casilla : casillas){
-                    System.out.println(casilla.getNombre());
-                }
             } else if (posI[0] > posS[0]) {
                 casillas = obtenerCasillasDiagonalesAbajo(posI[0], posI[1], casillas);
-                for(Casilla casilla : casillas){
-                    System.out.println(casilla.getNombre());
-                }
             }else {
+                return false;
+            }
+            if (pieza.valido(posI, posS, casillas)){
+                editarCasilla(posIni, desocuparCasilla(casilla1));
+                editarCasilla(posSig, ocuparCasilla(casilla2, pieza));
+                return true;
+            }
+        } else if (pieza instanceof Reina) {
+            if (posI[0] == posS[0]) {
+                p = posI[0]-1;
+                casillas = obtenerCasillasHorizontales(p, casillas);
+            } else if (posI[1] == posS[1]) {
+                p = posI[1]-1;
+                casillas = obtenerCasillasVerticales(p, casillas);
+            } else if (posI[0] < posS[0]) casillas = obtenerCasillasDiagonalesArriba(posI[0], posI[1], casillas);
+
+            else if (posI[0] > posS[0]) casillas = obtenerCasillasDiagonalesAbajo(posI[0], posI[1], casillas);
+            else {
                 return false;
             }
             if (pieza.valido(posI, posS, casillas)){
