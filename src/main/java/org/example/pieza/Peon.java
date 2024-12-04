@@ -32,13 +32,13 @@ public class Peon extends Pieza{
                     return false;
                 }
             } else if (!primerMovimiento) {
-                if((posS[0] == posI[0]+1) && posS[1] == posI[1]){ //Validar que el peon solo se mueva una casilla
+                if((posS[0] == posI[0]+1) || (posS[0] == posI[0]-1) && posS[1] == posI[1]){ //Validar que el peon solo se mueva una casilla
                     return true;
                 }else{
                     return false;
                 }
             } else if (primerMovimiento) { //En caso de que sea el primer movimiento del peon permitirle mover dos casilla
-                if((posS[0] == posI[0]+1 || posS[0] == posI[0]+2) && posI[1] == posS[1]){
+                if((posS[0] == posI[0]+1 || posS[0] == posI[0]+2) || (posS[0] == posI[0]-1 || posS[0] == posI[0]-2) && posI[1] == posS[1]){
                     Casilla c = buscarCasilla(casillaList, posI); //Obtenemos la casilla
                     if(c.getOcupada()){
                         return false; //Por si el peon salta dos casilla y la casilla intermedia este ocupada retorna false
@@ -56,7 +56,12 @@ public class Peon extends Pieza{
 
     @Override
     public Casilla buscarCasilla(List<Casilla> casillaList, int[] pos) {
-        int i = pos[0]+1;
+        int i = 0;
+        if(color.equals("Negro")){
+            i = pos[0]-1;
+        } else if (color.equals("Blanco")) {
+            i = pos[0]+1;
+        }
         String p = "" + i + "" + pos[1]; //Para obtener la casilla del frente
         for (Casilla c : casillaList) {
             if(c.getNombre().equals(p)){
