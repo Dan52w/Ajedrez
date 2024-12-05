@@ -402,4 +402,17 @@ public class Tablero {
             System.out.println();
         }
     }
+
+    public void imprimirTableroJuego(){
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if(tablero[i][j].getPieza() == null){
+                    System.out.print("[  " + tablero[i][j].getNombre() + " " + tablero[i][j].getColor()+ "  ]");
+                }else {
+                    System.out.print("[ " + tablero[i][j].getPieza().getTipo() + tablero[i][j].getNombre() + " ]");
+                }
+            }
+            System.out.println();
+        }
+    }
 }

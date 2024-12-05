@@ -29,9 +29,6 @@ public class Rey extends Pieza{
     @Override
     public Boolean comprobarCasillas(List<Casilla> casillaList, int[] posI, int[] posS) {
         int i = 0;
-        for (Casilla c: casillaList) {
-            System.out.println("Casillas " + c.getNombre() + " " + c.getOcupada());
-        }
         for (Casilla casilla : casillaList) {
             System.out.println("Casilla " + i + " " + casilla.getNombre() + " " + casilla.getOcupada());
             if (i != 0){
