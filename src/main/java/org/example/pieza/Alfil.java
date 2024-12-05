@@ -30,24 +30,30 @@ public class Alfil extends Pieza{
     public Boolean comprobarCasillas(List<Casilla> casillaList, int[] posI, int[] posS) {
         Casilla casilla = casillaList.getFirst();
         if(posI[0] < posS[0]){ //En caso de que la fila ini sea menor a la fila sig se debe buscar por el metodo arriba
-            return comprobarCasillasArriba(casillaList, casilla, posI);
+            return comprobarCasillasArriba(casillaList, casilla, posI, posS);
         } else if (posI[0] > posS[0]) { //En caso de que la fila ini sea mayor a la fila sig se debe buscar el metodo abajo
-            return comprobarCasillasAbajo(casillaList, casilla, posI);
+            return comprobarCasillasAbajo(casillaList, casilla, posI, posS);
         }
         return false;
     }
 
-    private Boolean comprobarCasillasAbajo(List<Casilla> casillaList, Casilla casilla, int[] posI) {
+    private Boolean comprobarCasillasAbajo(List<Casilla> casillaList, Casilla casilla, int[] posI, int[] posS) {
         int i = 0; //Para validar que no tome al primero que este siempre sera la casilla donde debe dirigirse
         int[] mov; //Vector donde guardaremos las pos de cada casilla
+        boolean movColumMayor = posI[1] < posS[1];
+        String nombCas = casilla.getNombre();
         for (Casilla c : casillaList) {
             if(i != 0){ //Validar que no tome el primero
                 mov = descomponer(c.getNombre()); //Llamamos el metodo descomponer que nos retornara un vector de 2
                 if (mov[0] < posI[0]) { //Como nos movemos hacia abajo la fila sig debe ser siempre menor que la fila Ini
-                    if(c.getOcupada() && !c.getNombre().equals(casilla.getNombre())){
-                        return false; //En caso de que alguna casilla esta ocupada y sea distinta de la casilla Sig el movimiento no debe ser valido
-                    } else if (c.getNombre().equals(casilla.getNombre())) {
-                        return true; //Pero en caso de que este ocupada y si sea la casilla sig el movimiento se ejecuta
+                    if (movColumMayor){
+                        if (c.getOcupada() && !c.getNombre().equals(nombCas)) {
+                            return true; //Para casos en los que no este ocupada verificar por el nombre
+                        }
+                    } else {
+                        if (c.getNombre().equals(nombCas)) {
+                            return true; //Para casos en los que no este ocupada verificar por el nombre
+                        }
                     }
                 }
             }
@@ -56,17 +62,23 @@ public class Alfil extends Pieza{
         return false;
     }
     //Muchas de las carracteristicas de este son iguales a las de arriba asi que se comentaran las diferencias
-    private Boolean comprobarCasillasArriba(List<Casilla> casillaList, Casilla casilla, int[] posI) {
+    private Boolean comprobarCasillasArriba(List<Casilla> casillaList, Casilla casilla, int[] posI, int[] posS) {
         int i = 0;
         int[] mov;
+        boolean movColumMayor = posI[1] < posS[1];
+        String nombCas = casilla.getNombre();
         for (Casilla c : casillaList) {
             if(i != 0){
                 mov = descomponer(c.getNombre());
                 if (posI[0] <= mov[0]) { //Como nos movemos hacia arriba la fila sig debe ser siempre mayor que la fila Ini
-                    if(c.getOcupada() && !c.getNombre().equals(casilla.getNombre())){
-                        return false;
-                    } else if (c.getNombre().equals(casilla.getNombre())) {
-                        return true;
+                    if (movColumMayor){
+                        if (c.getOcupada() && !c.getNombre().equals(nombCas)) {
+                            return false; //Para casos en los que este ocupada verificar por el nombre
+                        }
+                    } else {
+                        if (c.getNombre().equals(nombCas)) {
+                            return true; //Para casos en los que no este ocupada verificar por el nombre
+                        }
                     }
                 }
             }
